@@ -7,6 +7,9 @@ public:
   ~GraphObject();
   int px;
   int py;
+  int w;
+  int h;
 private:
+  void object_callback();
 };
 #endif // _GRAPH_OBJECT_H
