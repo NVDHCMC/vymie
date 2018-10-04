@@ -3,13 +3,13 @@
 
 class GraphObject {
 public:
-  GraphObject();
-  ~GraphObject();
+  GraphObject(): px(0), py(0), w(0), h(0) {}
+  virtual ~GraphObject() {}
+protected:
   int px;
   int py;
   int w;
   int h;
-private:
   void object_callback();
 };
 #endif // _GRAPH_OBJECT_H
