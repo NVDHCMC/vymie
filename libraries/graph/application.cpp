@@ -27,7 +27,7 @@ void Application::addChild(Graph *graph, GraphProperty p) {
 }
 
 // read the buttons
-int read_LCD_buttons()
+int Application::read_LCD_buttons()
 {
    int adc_key_in  = 0;
    adc_key_in = analogRead(0);      // read the value from the sensor
@@ -57,56 +57,50 @@ int read_LCD_buttons()
 void Application::handle() {
   current_time = millis();
   if ((current_time - start_time) >= 1000) {
-    printf("COC");
     start_time = current_time;
-    screen.lcd->print("Hello world");
-    int i = 0;
     int buttonState = 0;
     Event event;
-    while ((buttonState = read_LCD_buttons()) && (!buttonState)) {
-      if (Select) {
-        event = {SEL_BUTTON, screen.cx, screen.cy};
-      }
-      else {
-        event = {NAV_BUTTON, screen.cx, screen.cy};
-        switch (buttonState) {
-          case Left: {
-            if (screen.cx > 0) {
-                screen.cx -= 1;
-            }
-            //screen.lcd->setCursor(screen.cx, screen.cy);
-            break;
+    buttonState = read_LCD_buttons();
+    if (buttonState == Select) {
+      event = {SEL_BUTTON, screen.cx, screen.cy};
+    }
+    else {
+      event = {NAV_BUTTON, screen.cx, screen.cy};
+      switch (buttonState) {
+        case Left: {
+          if (screen.cx > 0) {
+              screen.cx -= 1;
           }
-          case Down: {
-            if (screen.cy > 0) {
-              screen.cy -= 1;
-            }
-            //screen.lcd->setCursor(screen.cx, screen.cy);
-            break;
+          //screen.lcd->setCursor(screen.cx, screen.cy);
+          break;
+        }
+        case Down: {
+          if (screen.cy > 0) {
+            screen.cy -= 1;
           }
-          case Up: {
-            if (screen.cy < 1) {
-              screen.cy += 1;
-            }
-            //screen.lcd->setCursor(screen.cx, screen.cy);
-            break;
+          //screen.lcd->setCursor(screen.cx, screen.cy);
+          break;
+        }
+        case Up: {
+          if (screen.cy < 1) {
+            screen.cy += 1;
           }
-          case Right: {
-            if (screen.cx < 16) {
-              screen.cy += 1;
-            }
-            //screen.lcd->setCursor(screen.cx, screen.cy);
-            break;
+          //screen.lcd->setCursor(screen.cx, screen.cy);
+          break;
+        }
+        case Right: {
+          if (screen.cx < 16) {
+            screen.cy += 1;
           }
-          default: {
-            break;
-          }
+          //screen.lcd->setCursor(screen.cx, screen.cy);
+          break;
+        }
+        default: {
+          break;
         }
       }
-
-      eventHandler(event);
-      i++;
-    } // while loop
+    }
+    eventHandler(event);
 
     // Draw top graph on screen;
     this->top_graph->draw(screen);

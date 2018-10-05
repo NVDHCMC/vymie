@@ -17,6 +17,7 @@ public:
   void eventHandler(Event event);
   void goToGraph(const char* graph_name);
 private:
+  int read_LCD_buttons();
   int buttons[5] = {13, 14, 15, 16, 17};
   uint32_t current_time;
   uint32_t start_time;

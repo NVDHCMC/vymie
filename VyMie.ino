@@ -20,10 +20,11 @@ void setup() {
 //  mainGui.addChild(new Button(4, 1, "CNL", CANCEL_button_callback, NULL));
 //  mainGui.addChild(new Button(8, 1, "PWM", PWM_Settings_button_callback, NULL));
   Graph pwmSettings("pwm_settings");
-  
+
   app.addChild(&mainGui);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  app.handle();
 }
