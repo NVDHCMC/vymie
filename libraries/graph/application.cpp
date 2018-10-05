@@ -20,8 +20,10 @@ void Application::addChild(Graph *graph, GraphProperty p) {
       this->childList->current_graph = graph;
     }
     else {
-      this->childList->next = this->childList;
-      this->childList->current_graph = graph;
+      GraphList* temp = reinterpret_cast<GraphList>(malloc(sizeof(GraphList)));
+      temp->next = this->childList;
+      temp->current_graph = graph;
+      this->childList = temp;
     }
   }
 }
@@ -71,28 +73,24 @@ void Application::handle() {
           if (screen.cx > 0) {
               screen.cx -= 1;
           }
-          //screen.lcd->setCursor(screen.cx, screen.cy);
           break;
         }
         case Down: {
           if (screen.cy > 0) {
             screen.cy -= 1;
           }
-          //screen.lcd->setCursor(screen.cx, screen.cy);
           break;
         }
         case Up: {
           if (screen.cy < 1) {
             screen.cy += 1;
           }
-          //screen.lcd->setCursor(screen.cx, screen.cy);
           break;
         }
         case Right: {
           if (screen.cx < 16) {
             screen.cy += 1;
           }
-          //screen.lcd->setCursor(screen.cx, screen.cy);
           break;
         }
         default: {

@@ -21,7 +21,7 @@ void setup() {
 //  mainGui.addChild(new Button(8, 1, "PWM", PWM_Settings_button_callback, NULL));
   Graph pwmSettings("pwm_settings");
 
-  app.addChild(&mainGui);
+  app.addChild(&mainGui, GRAPH_HOME);
 }
 
 void loop() {
