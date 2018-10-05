@@ -1,11 +1,9 @@
 #include "button.h"
 
-Button::Button() {}
-
-Button::Button(int px, int py, char* content): GraphObject(), content(NULL) {
+Button::Button(int px, int py, char* content, objectCallbackFn callback, void* params): GraphObject() {
   GraphObject::px = px;
   GraphObject::py = py;
-  this->content = content;
+  GraphObject::content = content;
 
   int len = strlen(content);
   if (len > 3) {
@@ -15,6 +13,9 @@ Button::Button(int px, int py, char* content): GraphObject(), content(NULL) {
 
   GraphObject::w = len;
   GraphObject::h = 1;
+  if (callback != NULL) {
+    setCallback(callback, params);
+  }
 }
 
 Button::~Button() {
@@ -23,7 +24,6 @@ Button::~Button() {
   }
 }
 
-void Button::draw(LiquidCrystal* lcd) {
-  lcd->setCursor(px, py);
-  lcd->print(content);
+void Button::draw(Screen& screen) {
+  GraphObject::draw(screen);
 }

@@ -5,26 +5,26 @@
 #define _GRAPH_H
 
 #include <LiquidCrystal.h>
-#include <Arduino.h>
 #include "graph_object.h"
 #include "button.h"
+#include "common.h"
 
 struct ObjectList {
   GraphObject *current_object;
-  GraphObject *next;
+  ObjectList *next;
 };
 
-class graph {
+class Graph {
 public:
-  graph(LiquidCrystal* lcd);
-  ~graph();
+  Graph(const char* name);
+  ~Graph();
   void handle();
-  void update_display();
+  void addChild(GraphObject* graphObject);
+  void draw(Screen& screen);
+  void eventHandler(Screen& screen, Event event);
+  const char* _name;
 private:
   ObjectList *objectList;
-  LiquidCrystal* lcd;
-  uint32_t current_time;
-  uint32_t start_time;
 };
 
 #endif // _GRAPH_H

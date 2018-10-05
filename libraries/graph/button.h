@@ -9,12 +9,12 @@
 
 class Button: public GraphObject {
 public:
-  Button();
-  Button(int px, int py, char* content);
+  Button(int px, int py, char* content) {
+    Button(px, py, content, NULL, NULL);
+  }
+  Button(int px, int py, char* content, objectCallbackFn callback, void* params);
   ~Button();
-  void draw(LiquidCrystal* lcd);
-private:
-  char * content;
+  void draw(Screen& screen);
 };
 
 #endif // _BUTTON_H

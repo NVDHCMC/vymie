@@ -1,21 +1,29 @@
-#include <graph.h>
+#include <application.h>
 
-const int rs = 8, en = 9, d4 = 4, d5 = 5, d6 = 6, d7 = 7;
-LiquidCrystal lcd(rs, en, d4, d5, d6, d7);;
-graph main_gui(&lcd);
-graph pwm_level_settings(&lcd);
-graph pwm_time_settings(&lcd);
+Application app;
+
+void *OK_button_callback(void *params) {
+  printf("Ok button is pressed");
+}
+
+void *CANCEL_button_callback(void *params) {
+  printf("Cancel button is pressed");
+}
+
+void *PWM_Settings_button_callback(void *params) {
+  app.goToGraph("pwm_settings");
+}
 
 void setup() {
-  // put your setup code here, to run once:
-  Button move_to_pwm_level_settings(0, 1, "OK");
-  move_to_pwm_level_settings.draw(&lcd);
-  Button move_to_time_settings(3, 1, "TIME");
-  move_to_time_settings.draw(&lcd);
-  // main_gui.add_object(move_to_pwm_level_settings);
+  Graph mainGui("mainGUI");
+  mainGui.addChild(new Button(0, 1, "OK", OK_button_callback, NULL));
+  mainGui.addChild(new Button(4, 1, "CNL", CANCEL_button_callback, NULL));
+  mainGui.addChild(new Button(8, 1, "PWM", PWM_Settings_button_callback, NULL));
+  Graph pwmSettings("pwm_settings");
+  
+  app.addChild(&mainGui);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  main_gui.handle();
 }
