@@ -3,7 +3,8 @@
 void GraphObject::draw(Screen& screen) {
   screen.lcd->setCursor(px, py);
   screen.lcd->print(content);
-  screen.cx += w;
+  //screen.cx = px + w;
+  //screen.cy = py + h;
 }
 
 void GraphObject::setCallback(objectCallbackFn callback, void* params) {
