@@ -20,10 +20,11 @@ public:
   ~Graph();
   void handle();
   void addChild(GraphObject* graphObject);
-  void draw(Screen& screen);
-  void eventHandler(Screen& screen, Event event);
+  void draw(Screen* screen);
+  void eventHandler(Screen* screen, Event event);
   const char* _name;
 private:
+  GraphObject* selectedButton;
   ObjectList *objectList;
 };
 

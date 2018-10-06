@@ -14,7 +14,7 @@ public:
   }
   Spinner(int px, int py, SpinnerType t, objectCallbackFn callback, void* params);
   ~Spinner();
-  void draw(Screen& screen);
+  void draw(Screen* screen);
 private:
   bool selected;
 };

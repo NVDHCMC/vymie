@@ -1,10 +1,10 @@
 #include "graph_object.h"
 
-void GraphObject::draw(Screen& screen) {
-  screen.lcd->setCursor(px, py);
-  screen.lcd->print(content);
-  //screen.cx = px + w;
-  //screen.cy = py + h;
+void GraphObject::draw(Screen* screen) {
+  screen->lcd->setCursor(px, py);
+  screen->lcd->print(content);
+  //screen->cx = px + w;
+  //screen->cy = py + h;
 }
 
 void GraphObject::setCallback(objectCallbackFn callback, void* params) {
@@ -12,20 +12,22 @@ void GraphObject::setCallback(objectCallbackFn callback, void* params) {
   this->_callback_params = params;
 }
 
-bool GraphObject::eventHandler(Screen& screen, Event event) {
-  if (((screen.cx - this->px) > 0) && ((screen.cy - this->py) > 0)) {
-    _callback(this->_callback_params);
-    return true;
-  }
-  else {
-    return false;
-  }
+void GraphObject::eventHandler(Event event) {
+  _callback(this->_callback_params);
 }
 
-bool GraphObject::isCallbackNull() {
-  bool ans = false;
+bool GraphObject::haveCallback() {
+  bool ans = true;
   if (_callback == NULL) {
-    ans = true;
+    ans = false;
   }
   return ans;
+}
+
+int GraphObject::getX() {
+  return px;
+}
+
+int GraphObject::getY() {
+  return py;
 }
