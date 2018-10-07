@@ -6,26 +6,26 @@
 
 #include <LiquidCrystal.h>
 #include "graph_object.h"
+#include "spinner.h"
 #include "button.h"
+#include "textbox.h"
 #include "common.h"
-
-struct ObjectList {
-  GraphObject *current_object;
-  ObjectList *next;
-};
 
 class Graph {
 public:
   Graph(const char* name);
-  ~Graph();
-  void handle();
+  virtual ~Graph();
   void addChild(GraphObject* graphObject);
-  void draw(Screen* screen);
-  void eventHandler(Screen* screen, Event event);
+  virtual void draw(Screen* screen);
+  virtual void eventHandler(Screen* screen, Event event);
   const char* _name;
-private:
-  GraphObject* selectedButton;
+protected:
+  struct ObjectList {
+    GraphObject *current_object;
+    ObjectList *next;
+  };
   ObjectList *objectList;
+  GraphObject* selectedObject;
 };
 
 #endif // _GRAPH_H

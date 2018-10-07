@@ -1,6 +1,6 @@
 #include <graph.h>
 
-Graph::Graph(const char* name): selectedButton(NULL) {
+Graph::Graph(const char* name): selectedObject(NULL) {
   this->objectList = reinterpret_cast<ObjectList*>(malloc(sizeof(ObjectList)));
   this->objectList->current_object = NULL;
   this->objectList->next = NULL;
@@ -8,10 +8,6 @@ Graph::Graph(const char* name): selectedButton(NULL) {
 }
 
 Graph::~Graph() {}
-
-void Graph::handle() {
-  // Print a message to the LCD.
-}
 
 void Graph::addChild(GraphObject *graphObject) {
   if (graphObject != NULL) {
@@ -27,89 +23,90 @@ void Graph::addChild(GraphObject *graphObject) {
   }
 }
 
-void Graph::draw(Screen* screen) {
-  ObjectList *temp = this->objectList;
-  while (temp != NULL) {
-    temp->current_object->draw(screen);
-    temp = temp->next;
-  }
-}
+void Graph::draw(Screen* screen) {}
 
 void Graph::eventHandler(Screen* screen, Event event) {
   if (event.t == SEL_BUTTON) {
-    ObjectList *temp = this->objectList;
-    if (selectedButton != NULL) {
-      if(selectedButton->haveCallback()) {
-        selectedButton->eventHandler(event);
-      }
+    if (selectedObject != NULL) {
+      selectedObject->eventHandler(screen, event);
     }
   } // if
   else {
-    screen->lcd->setCursor(14, 0);
-    screen->lcd->print(screen->cx);
-    screen->lcd->setCursor(14, 1);
-    screen->lcd->print(screen->cy);
-    if (selectedButton != NULL) {
-      reinterpret_cast<Button*>(selectedButton)->deselect();
-    }
-    ObjectList *temp = this->objectList;
-    int minDis = 1000;
-    while (temp != NULL) {
-      if (temp->current_object->t == OBJ_BUTTON) {
-        switch (event.t) {
-          case NAV_BUTTON_LEFT: {
-            if (screen->cy == temp->current_object->getY()) {
-              int dis = screen->cx - temp->current_object->getX();
-              if (dis < 0) {
-                if (minDis > dis) {
-                  minDis = dis;
-                  selectedButton = temp->current_object;
-                }
-              }
-            }
-          }
-          case NAV_BUTTON_RIGHT: {
-            if (screen->cy == temp->current_object->getY()) {
-              int dis = temp->current_object->getX() - screen->cx;
-              if (dis > 0) {
-                if (minDis > dis) {
-                  minDis = dis;
-                  selectedButton = temp->current_object;
-                }
-              }
-            }
-          }
-        //   case NAV_BUTTON_UP: {
-        //     if (temp->current_object->getY() == 0) {
-        //       int dis = abs(screen->cx - temp->current_object->getX());
-        //       if (minDis > dis) {
-        //         minDis = dis;
-        //         selectedButton = temp->current_object;
-        //       }
-        //     }
-        //   }
-        //   case NAV_BUTTON_DOWN: {
-        //     if (temp->current_object->getY() == 1) {
-        //       unsigned int dis = abs(screen->cx - temp->current_object->getX());
-        //       if (minDis > dis) {
-        //         minDis = dis;
-        //         selectedButton = temp->current_object;
-        //       }
-        //     }
-        //   }
-        } // switch case
-
+    bool handled = false;
+    if (selectedObject != NULL) {
+      if (selectedObject->t == OBJ_SPINNER) {
+        if(reinterpret_cast<Spinner*>(selectedObject)->isChosen()) {
+          selectedObject->eventHandler(screen, event);
+          handled = true;
+        }
       }
-
-      temp = temp->next;
-    } //while loop
-
-    if (selectedButton != NULL) {
-      reinterpret_cast<Button*>(selectedButton)->selected();
-      screen->lcd->setCursor(10, 0);
-      screen->lcd->print("2");
-      screen->cy = selectedButton->getY();
-      screen->cx = selectedButton->getX();
+      if (!handled) {
+        selectedObject->deselect();
+      }
     }
+
+    if (!handled) {
+      // Look through object list to find the current selected object
+      ObjectList *temp = this->objectList;
+      int minDis = 1000;
+      while (temp != NULL) {
+        if ((temp->current_object->t == OBJ_BUTTON) || (temp->current_object->t == OBJ_SPINNER)) {
+          switch (event.t) {
+            case NAV_BUTTON_LEFT: {
+              if (screen->cy == temp->current_object->getY()) {
+                signed int dis = screen->cx - temp->current_object->getX();
+                if (dis > 0) {
+                  if (minDis > dis) {
+                    minDis = dis;
+                    selectedObject = temp->current_object;
+                  }
+                }
+              }
+              break;
+            }
+            case NAV_BUTTON_RIGHT: {
+              if (screen->cy == temp->current_object->getY()) {
+                signed int dis = temp->current_object->getX() - screen->cx;
+                if (dis > 0) {
+                  if (minDis > dis) {
+                    minDis = dis;
+                    selectedObject = temp->current_object;
+                  }
+                }
+              }
+              break;
+            }
+            case NAV_BUTTON_UP: {
+              if (temp->current_object->getY() == 0) {
+                int dis = abs(screen->cx - temp->current_object->getX());
+                if (minDis > dis) {
+                  minDis = dis;
+                  selectedObject = temp->current_object;
+                }
+              }
+              break;
+            }
+            case NAV_BUTTON_DOWN: {
+              if (temp->current_object->getY() == 1) {
+                unsigned int dis = abs(screen->cx - temp->current_object->getX());
+                if (minDis > dis) {
+                  minDis = dis;
+                  selectedObject = temp->current_object;
+                }
+              }
+              break;
+            }
+          } // switch case
+
+        }
+
+        temp = temp->next;
+      } //while loop
+    }// check if event is handled
+  } // If select button
+  if (selectedObject != NULL) {
+    reinterpret_cast<Button*>(selectedObject)->select();
+    screen->cy = selectedObject->getY();
+    screen->cx = selectedObject->getX();
   }
 }

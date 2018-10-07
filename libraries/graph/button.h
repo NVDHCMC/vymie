@@ -14,9 +14,14 @@ public:
   }
   Button(int px, int py, const char* content, objectCallbackFn callback, void* params);
   ~Button();
-  void selected();
+  void select();
   void deselect();
-  // void draw(Screen* screen);
+  void setCallback(objectCallbackFn callback, void* params);
+  void eventHandler(Screen* screen, Event event);
+private:
+  void* _callback_params;
+  objectCallbackFn _callback;
+  bool selected;
 };
 
 #endif // _BUTTON_H

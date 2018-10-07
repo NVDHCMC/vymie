@@ -1,16 +1,7 @@
 #include "application.h"
 
-Application::Application(): start_time(0), current_time(0) {
-  screen = reinterpret_cast<Screen*>(malloc(sizeof(Screen)));
-  screen->lcd = new LiquidCrystal(8, 9, 4, 5, 6, 7);
-  screen->lcd->begin(16, 2);
-  screen->cx = 0;
-  screen->cy = 0;
-  // create a new character
-  screen->lcd->createChar(0, aU);
-  // create a new character
-  screen->lcd->createChar(1, aD);
-
+Application::Application(): start_time(0), current_time(0), buttonSamplingRate(0), previouslySelectedButton(NONE) {
+  screen = new Screen();
   start_time = millis();
   this->childList = reinterpret_cast<GraphList*>(malloc(sizeof(GraphList)));
   this->childList->current_graph = NULL;
@@ -42,31 +33,31 @@ void Application::addChild(Graph *graph, GraphProperty p) {
 int Application::read_LCD_buttons()
 {
    int adc_key_in  = 0;
-   adc_key_in = analogRead(0);      // read the value from the sensor
-   // my buttons when read are centered at these valies: 0, 144, 329, 504, 741
-   // we add approx 50 to those values and check to see if we are close
-   if (adc_key_in > 1000) return None; // We make this the 1st option for speed reasons since it will be the most likely result
-
-   // For V1.0 comment the other threshold and use the one below:
-
+   adc_key_in = analogRead(0);
+   if (adc_key_in > 1000) return None;
    if (adc_key_in < 50)   return Right;
    if (adc_key_in < 195)  return Up;
    if (adc_key_in < 380)  return Down;
    if (adc_key_in < 555)  return Left;
    if (adc_key_in < 790)  return Select;
 
-
-
    return None;  // when all others fail, return this...
 }
 
 void Application::handle() {
   current_time = millis();
-  if ((current_time - start_time) >= 50) {
+  if ((current_time - start_time) >= 30) {
     start_time = current_time;
     int buttonState = 0;
     Event event = {NONE, screen->cx, screen->cy};
-    buttonState = read_LCD_buttons();
+    buttonState = None;
+    if (buttonSamplingRate < 4) {
+      buttonSamplingRate++;
+    }
+    else {
+      buttonSamplingRate = 0;
+      buttonState = read_LCD_buttons();
+    }
     if (buttonState == Select) {
       event.t = SEL_BUTTON;
     }
@@ -96,16 +87,14 @@ void Application::handle() {
     eventHandler(event);
 
     // Draw top graph on screen;
-    //screen->lcd->clear();
+    screen->clear();
     this->top_graph->draw(screen);
+    screen->drawScreen();
   } // if loop for screen refresh
 }
 
 void Application::eventHandler(Event event) {
-  if (event.t == SEL_BUTTON) {
-    top_graph->eventHandler(screen, event);
-  }
-  else if (event.t != NONE) {
+  if (event.t != NONE) {
     top_graph->eventHandler(screen, event);
   }
 }
@@ -115,6 +104,8 @@ void Application::goToGraph(const char* graph_name) {
   while (temp != NULL) {
     if (strcmp(graph_name, temp->current_graph->_name) == 0) {
       this->top_graph = temp->current_graph;
+      Event event = {SET_ACTIVE, screen->cx, screen->cy};
+      this->top_graph->eventHandler(screen, event);
       break;
     }
     temp = temp->next;

@@ -9,24 +9,22 @@ typedef void (*objectCallbackFn)(void *params);
 
 class GraphObject {
 public:
-  GraphObject(): px(0), py(0), w(0), h(0), content(NULL), _callback(NULL), _callback_params(NULL), t(OBJ_TEXT) {}
-  virtual ~GraphObject() {}
-  bool haveCallback();
-  void eventHandler(Event event);
-  void draw(Screen* screen);
-  void setCallback(objectCallbackFn callback, void* params);
+  GraphObject(): px(0), py(0), w(0), h(0), content(NULL), t(OBJ_TEXT) {}
+  virtual ~GraphObject() {free(content);}
+  virtual void eventHandler(Screen* screen, Event event) {}
+  virtual void draw(Screen* screen);
+  virtual void setCallback(objectCallbackFn callback, void* params) {}
   int getX();
   int getY();
   ObjectType t;
-  char * content;
-private:
-  void* _callback_params;
-  objectCallbackFn _callback;
+  virtual void select() {}
+  virtual void deselect() {}
+  virtual bool isSelected() {return false;}
 protected:
   int px;
   int py;
   int w;
   int h;
-
+  char * content;
 };
 #endif // _GRAPH_OBJECT_H

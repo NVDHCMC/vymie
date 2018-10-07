@@ -1,8 +1,7 @@
 #include <Arduino.h>
 
-#include "graph.h"
-#include "graph_object.h"
-#include "button.h"
+#include "basic_graph.h"
+#include "scroll_graph.h"
 #include "common.h"
 
 #ifndef _APPLICATION_H
@@ -27,28 +26,8 @@ private:
   };
   struct Screen* screen;
   struct GraphList* childList;
-
-  byte aU[8] = {
-    0b00100,
-    0b01110,
-    0b11111,
-    0b00000,
-    0b00000,
-    0b00000,
-    0b00000,
-    0b00000
-  };
-
-  byte aD[8] = {
-    0b00000,
-    0b00000,
-    0b00000,
-    0b00000,
-    0b00000,
-    0b11111,
-    0b01110,
-    0b00100
-  };
+  int buttonSamplingRate;
+  EventType previouslySelectedButton;
 };
 
 #endif // _APPLICATION_H

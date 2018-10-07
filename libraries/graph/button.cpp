@@ -1,6 +1,7 @@
 #include "button.h"
 
-Button::Button(int px, int py, const char* content, objectCallbackFn callback, void* params): GraphObject() {
+Button::Button(int px, int py, const char* content, objectCallbackFn callback, void* params)\
+  : GraphObject(), selected(false), _callback(NULL), _callback_params(NULL) {
   GraphObject::t = OBJ_BUTTON;
   GraphObject::px = px;
   GraphObject::py = py;
@@ -26,21 +27,36 @@ Button::Button(int px, int py, const char* content, objectCallbackFn callback, v
   }
 }
 
-Button::~Button() {
-  if (content != NULL) {
-    free(content);
-  }
-}
+Button::~Button() {}
 
-void Button::selected() {
-  for (int i = 4; i > 0; i--) {
-    GraphObject::content[i] = GraphObject::content[i-1];
+void Button::select() {
+  if (!selected) {
+    for (int i = 4; i > 0; i--) {
+      GraphObject::content[i] = GraphObject::content[i-1];
+    }
+    GraphObject::content[0] = '>';
+    GraphObject::w++;
+    selected = true;
   }
-  GraphObject::content[0] = '>';
 }
 
 void Button::deselect() {
-  for (int i = 0; i < 4; i++) {
-    GraphObject::content[i] = GraphObject::content[i+1];
+  if (selected) {
+    for (int i = 0; i < 4; i++) {
+      GraphObject::content[i] = GraphObject::content[i+1];
+    }
+    GraphObject::w--;
+    selected = false;
+  }
+}
+
+void Button::setCallback(objectCallbackFn callback, void* params) {
+  this->_callback = callback;
+  this->_callback_params = params;
+}
+
+void Button::eventHandler(Screen* screen, Event event) {
+  if (this->_callback != NULL) {
+    _callback(this->_callback_params);
   }
 }
