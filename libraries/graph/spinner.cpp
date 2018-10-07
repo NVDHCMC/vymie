@@ -1,21 +1,22 @@
 #include "spinner.h"
 
-Spinner::Spinner(int px, int py, SpinnerType t, objectCallbackFn callback, void* params) \
-  : GraphObject(), selected(false), blinkRate(0), blinkPos(0), originalContent(NULL), modifiedContent(NULL), len(4), blink(false) {
+Spinner::Spinner(int px, int py, SpinnerType pt, objectCallbackFn callback, void* params) \
+  : GraphObject(), selected(false), blinkRate(0), blinkPos(0), originalContent(NULL), modifiedContent(NULL), len(4), blink(false), chosen(false) {
   GraphObject::px = px;
   GraphObject::py = py;
   GraphObject::t = OBJ_SPINNER;
   GraphObject::w = len;
-  if (originalContent != NULL) {
+  this->pt = pt;
+  if (originalContent == NULL) {
     originalContent = (char*) malloc(sizeof(char)*4);
   }
 
-  if (modifiedContent != NULL) {
+  if (modifiedContent == NULL) {
     modifiedContent = (char*) malloc(sizeof(char)*4);
   }
   for (int i = 0; i < 4; i++) {
-    originalContent[i] = 0;
-    modifiedContent[i] = 0;
+    originalContent[i] = ' ';
+    modifiedContent[i] = ' ';
   }
   GraphObject::content = modifiedContent;
 }
@@ -30,27 +31,24 @@ void Spinner::deselect() {
   selected = false;
 }
 
-void Spinner::choose  () {
-  if (chosen) {
-    chosen = false;
-  }
-  else {
-    chosen = true;
-  }
+void Spinner::choose() {
+  chosen = !chosen;
 }
 
 void Spinner::draw(Screen* screen) {
+  memcpy(modifiedContent, originalContent, len);
+  if (pt == SPINNER_NUMBER_DIAL) {
+    if (blink) {
+      modifiedContent[blinkPos + 1] = ' ';
+    }
+  }
+  else if (pt == SPINNER_TEXT_DIAL) {
+  }
+
   if (chosen) {
     blinkRate++;
-    if (blinkRate == 2) {
-      if (t == SPINNER_NUMBER_DIAL) {
-        memcpy(modifiedContent, originalContent, len);
-        if (blink) {
-          modifiedContent[blinkPos + 1] = ' ';
-        }
-      }
-      else if (t == SPINNER_TEXT_DIAL) {
-      }
+    if (blinkRate >= 17) {
+      blink = !blink;
       blinkRate = 0;
     }
   }
@@ -63,8 +61,12 @@ void Spinner::addEntry(int max, int min) {
   if (min < 0) {min = 0;}
   this->max = max;
   this->min = min;
-
-  sprintf(originalContent + 1, "%3d", min);
+  if (originalContent != NULL) {
+    sprintf(originalContent + 1, "%3d", min);
+    for (int i = 0; i < 3; i++) {
+      if (originalContent[i + 1] == ' ') {originalContent[i + 1] = '0';}
+    }
+  }
 }
 
 void Spinner::eventHandler(Screen* screen, Event event) {

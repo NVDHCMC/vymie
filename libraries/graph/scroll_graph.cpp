@@ -13,7 +13,7 @@ void ScrollGraph::draw(Screen* screen) {
     this->title = new Title("Default");
   }
   this->title->draw(screen);
-
+  Graph::draw(screen);
 }
 
 void ScrollGraph::addTitle(Title* title) {

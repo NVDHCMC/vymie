@@ -23,7 +23,13 @@ void Graph::addChild(GraphObject *graphObject) {
   }
 }
 
-void Graph::draw(Screen* screen) {}
+void Graph::draw(Screen* screen) {
+  ObjectList *temp = Graph::objectList;
+  while (temp != NULL) {
+    temp->current_object->draw(screen);
+    temp = temp->next;
+  }
+}
 
 void Graph::eventHandler(Screen* screen, Event event) {
   if (event.t == SEL_BUTTON) {

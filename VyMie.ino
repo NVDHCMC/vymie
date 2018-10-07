@@ -25,8 +25,11 @@ void setup() {
   ScrollGraph* pwmSettings = new ScrollGraph("pwm_settings");
   pwmSettings->addTitle(new Title("PWM Level Settings"));
   Spinner* pwm1 = new Spinner(0, 1, SPINNER_NUMBER_DIAL, NULL, NULL);
-  pwm1->addEntry(0, 100);
+  Spinner* pwm2 = new Spinner(0, 2, SPINNER_NUMBER_DIAL, NULL, NULL);
+  pwm1->addEntry(100, 0);
+  pwm2->addEntry(100, 0);
   pwmSettings->addChild(pwm1);
+  pwmSettings->addChild(pwm2);
 
   app->addChild(mainGui, GRAPH_HOME);
   app->addChild(pwmSettings);
