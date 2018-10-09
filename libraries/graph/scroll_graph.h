@@ -16,8 +16,13 @@ public:
   void eventHandler(Screen* screen, Event event);
   void draw(Screen* screen);
   void addTitle(Title* title);
+  void addChild(GraphObject* graphObject);
+  void scrollUp();
+  void scrollDown();
 private:
   Title* title;
+  int scrollMax;
+  int scrollNow;
 };
 
 #endif // _SCROLL_GRAPH_H

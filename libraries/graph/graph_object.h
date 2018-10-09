@@ -14,12 +14,15 @@ public:
   virtual void eventHandler(Screen* screen, Event event) {}
   virtual void draw(Screen* screen);
   virtual void setCallback(objectCallbackFn callback, void* params) {}
+  virtual bool isChosen() {return false;}
   int getX();
   int getY();
   ObjectType t;
   virtual void select() {}
   virtual void deselect() {}
   virtual bool isSelected() {return false;}
+  void shiftUp();
+  void shiftDown();
 protected:
   int px;
   int py;

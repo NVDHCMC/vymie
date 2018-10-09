@@ -111,7 +111,7 @@ void Graph::eventHandler(Screen* screen, Event event) {
     }// check if event is handled
   } // If select button
   if (selectedObject != NULL) {
-    reinterpret_cast<Button*>(selectedObject)->select();
+    selectedObject->select();
     screen->cy = selectedObject->getY();
     screen->cx = selectedObject->getX();
   }

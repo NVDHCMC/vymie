@@ -5,7 +5,7 @@
 
 class TextBox: public GraphObject {
 public:
-  TextBox(int px, int py, const char* content);
+  TextBox(int px, int py, char* content);
   virtual ~TextBox();
 private:
 

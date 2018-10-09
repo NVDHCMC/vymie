@@ -18,6 +18,8 @@ void Screen::clear() {
   for (int i = 0; i < 34; i++) {
     this->screen[i] = ' ';
   }
+  this->screen[16] = 0;
+  this->screen[33] = 0; 
 }
 
 void Screen::drawScreen() {

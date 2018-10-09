@@ -84,10 +84,11 @@ void Application::handle() {
         }
       }
     }
+    screen->clear();
     eventHandler(event);
 
     // Draw top graph on screen;
-    screen->clear();
+
     this->top_graph->draw(screen);
     screen->drawScreen();
   } // if loop for screen refresh

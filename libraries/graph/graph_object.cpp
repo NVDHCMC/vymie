@@ -11,3 +11,11 @@ int GraphObject::getX() {
 int GraphObject::getY() {
   return py;
 }
+
+void GraphObject::shiftUp() {
+  py++;
+}
+
+void GraphObject::shiftDown() {
+  py--;
+}

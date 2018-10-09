@@ -27,7 +27,7 @@ void Spinner::select() {
 }
 
 void Spinner::deselect() {
-  originalContent[0] = 0;
+  originalContent[0] = ' ';
   selected = false;
 }
 
@@ -51,6 +51,9 @@ void Spinner::draw(Screen* screen) {
       blink = !blink;
       blinkRate = 0;
     }
+  }
+  else {
+    modifiedContent[blinkPos + 1] = originalContent[blinkPos + 1];
   }
 
   GraphObject::draw(screen);

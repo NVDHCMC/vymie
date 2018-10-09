@@ -15,7 +15,7 @@ class Graph {
 public:
   Graph(const char* name);
   virtual ~Graph();
-  void addChild(GraphObject* graphObject);
+  virtual void addChild(GraphObject* graphObject);
   virtual void draw(Screen* screen);
   virtual void eventHandler(Screen* screen, Event event);
   const char* _name;
