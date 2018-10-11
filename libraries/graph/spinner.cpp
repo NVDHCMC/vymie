@@ -75,16 +75,38 @@ void Spinner::addEntry(int max, int min) {
 void Spinner::eventHandler(Screen* screen, Event event) {
   if (event.t == SEL_BUTTON) {
     this->choose();
+    if (!chosen) {
+      char* tempOriginalContent = (char*) malloc(sizeof(char)*4);
+      for (int i = 0; i < 3; i++) {
+        tempOriginalContent[i] = originalContent[i + 1];
+      }
+      int tempContent = atoi(tempOriginalContent);
+      if (tempContent > max) {tempContent = max;}
+      if (tempContent < min) {tempContent = min;}
+      itoa(tempContent,tempOriginalContent,10);
+      int len = strlen(tempOriginalContent);
+
+      for (int i = 1; i < 4; i++) {
+        originalContent[i] = '0';
+      }
+      for (int i = len; i > 0; i--) {
+        originalContent[4 - i] = tempOriginalContent[len - i];
+      }
+    }
   }
   else {
     if (this->chosen) {
       switch (event.t) {
         case NAV_BUTTON_UP: {
-          originalContent[blinkPos + 1]++;
+          if (((int) originalContent[blinkPos + 1] >= 48) && ((int) originalContent[blinkPos + 1] < 57)) {
+            originalContent[blinkPos + 1]++;
+          }
           break;
         }
         case NAV_BUTTON_DOWN: {
-          originalContent[blinkPos + 1]--;
+          if (((int) originalContent[blinkPos + 1] > 48) && ((int) originalContent[blinkPos + 1] <= 57)) {
+            originalContent[blinkPos + 1]--;
+          }
           break;
         }
         case NAV_BUTTON_LEFT: {

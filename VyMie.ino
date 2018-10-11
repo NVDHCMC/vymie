@@ -17,8 +17,6 @@ void BACK_button_callback(void *params) {
 }
 
 void setup() {
-  Serial.begin(115200);
-  Serial.print("Start application\n");
   rtc = new RTC();
   rtc->readDS1307();
   app = new Application();
@@ -36,9 +34,9 @@ void setup() {
   Spinner* pwm4 = new Spinner(0, 4, SPINNER_NUMBER_DIAL, NULL, NULL);
   Spinner* pwm5 = new Spinner(0, 5, SPINNER_NUMBER_DIAL, NULL, NULL);
   Spinner* pwm6 = new Spinner(0, 6, SPINNER_NUMBER_DIAL, NULL, NULL);
-  pwm1->addEntry(100, 0);
-  pwm2->addEntry(100, 0);
-  pwm3->addEntry(100, 0);
+  pwm1->addEntry(100, 50);
+  pwm2->addEntry(90, 0);
+  pwm3->addEntry(80, 0);  
   pwm4->addEntry(100, 0);
   pwm5->addEntry(100, 0);
   pwm6->addEntry(100, 0);

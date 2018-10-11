@@ -3,6 +3,7 @@
 #include "string.h"
 #include "graph_object.h"
 #include "common.h"
+#include <stdlib.h>
 
 #ifndef _SPINNER_H
 #define _SPINNER_H

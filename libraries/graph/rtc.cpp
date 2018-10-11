@@ -2,7 +2,7 @@
 
 RTC::RTC(): hour(0), minute(0), sec(0), weekDay(0), day(0), month(0), year(0), DS1307(0x68), NumberOfFields(7) {
   Wire.begin();
-  //setTime(20, 58, 00, 3, 9, 10, 18); // 10:35:45 t2 08-10-2017
+  //setTime(9, 25, 00, 4, 10, 10, 18); // 10:35:45 t2 08-10-2017
   outputString = (char*) malloc(sizeof(char)*18);
   memset(outputString, 0x00, 18);
 }
@@ -44,7 +44,10 @@ void RTC::readDS1307() {
   day     = bcd2dec(Wire.read() );
   month   = bcd2dec(Wire.read() );
   year    = bcd2dec(Wire.read() );
-  year   += 0;
+
+  if (hour >= 24) {
+    hour -= 24;
+  }
   sprintf(outputString, "%2d:%2d:%2d %2d-%2d-%2d", hour, minute, sec, day, month, year);
   for (int i = 0; i < 18; i++) {
     if (outputString[i] == ' ') {
